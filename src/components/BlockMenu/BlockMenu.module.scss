@@ -1,0 +1,13 @@
+@import 'assets/styles/base.scss';
+
+.menu {
+  &__heading {
+    margin-bottom: 10.5px;
+    font-size: 12px;
+    font-style: normal;
+  }
+
+  &__item {
+    margin-bottom: 10.5px;
+  }
+}

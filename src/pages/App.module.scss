@@ -1,0 +1,16 @@
+@import 'assets/styles/base.scss';
+
+.main {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+
+  &__menu {
+    padding-top: 35px;
+    padding-left: 20px;
+    background-color: $color-default_dark;
+  }
+
+  &__content {
+    background-color: $color-default_white;
+  }
+}

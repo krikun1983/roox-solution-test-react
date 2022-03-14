@@ -1,8 +1,12 @@
 @import 'variables';
+@import 'fonts';
 
 html {
   box-sizing: border-box;
+  font-weight: 400;
   font-family: Roboto, Arial, sans-serif;
+  font-style: normal;
+  line-height: 1.2;
 }
 
 body {

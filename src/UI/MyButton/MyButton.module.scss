@@ -1,0 +1,19 @@
+@import 'assets/styles/base.scss';
+
+.btn {
+  padding: 5px 15px;
+  color: $color-default_white;
+  font-size: 12px;
+  background-color: $color_accent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $color_accent_hover;
+  }
+
+  &:disabled {
+    background-color: $color_disable;
+  }
+}
