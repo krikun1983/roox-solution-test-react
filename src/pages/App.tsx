@@ -6,7 +6,6 @@ import {useRoutes} from 'router/router';
 import BlockMenu from 'components/BlockMenu';
 import {User} from 'serverApi/types';
 import style from './App.module.scss';
-import {MyLoader} from 'UI';
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -48,17 +47,13 @@ const App: React.FC = () => {
 
   const routes = useRoutes();
   return (
-    <UserContext.Provider value={{users}}>
+    <UserContext.Provider value={{users, isLoading}}>
       <main className={style.main}>
         <section className={style.main__menu}>
           <BlockMenu setFilter={setFilter} />
         </section>
         <section className={style.main__content}>
-          {isLoading ? (
-            <MyLoader></MyLoader>
-          ) : (
-            <BrowserRouter>{routes}</BrowserRouter>
-          )}
+          <BrowserRouter>{routes}</BrowserRouter>
         </section>
       </main>
     </UserContext.Provider>
