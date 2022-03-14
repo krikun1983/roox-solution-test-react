@@ -4,7 +4,7 @@ import style from './NotFoundPage.module.scss';
 const NotFoundPage: React.FC = () => {
   return (
     <>
-      <div>Hello NotFoundPage component</div>
+      <h1 className={style.heading}>Hello NotFoundPage component</h1>
     </>
   );
 };

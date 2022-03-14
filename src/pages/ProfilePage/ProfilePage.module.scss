@@ -1,1 +1,9 @@
 @import 'assets/styles/base.scss';
+
+.profile {
+  &__heading {
+    font-weight: 700;
+    font-size: 14px;
+    font-style: bold;
+  }
+}

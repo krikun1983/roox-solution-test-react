@@ -3,9 +3,9 @@ import style from './HomePage.module.scss';
 
 const HomePage: React.FC = () => {
   return (
-    <>
-      <div>Hello HomePage component</div>
-    </>
+    <div className={style.home}>
+      <h1 className={style.home__heading}>Список пользователей</h1>
+    </div>
   );
 };
 

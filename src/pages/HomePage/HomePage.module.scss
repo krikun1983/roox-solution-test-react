@@ -1,1 +1,10 @@
 @import 'assets/styles/base.scss';
+
+.home {
+  &__heading {
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-size: 14px;
+    font-style: bold;
+  }
+}
