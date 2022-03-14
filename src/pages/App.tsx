@@ -6,28 +6,59 @@ import {useRoutes} from 'router/router';
 import BlockMenu from 'components/BlockMenu';
 import {User} from 'serverApi/types';
 import style from './App.module.scss';
+import {MyLoader} from 'UI';
 
 const App: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [filter, setFilter] = useState('default');
 
   const fetchUsers = async () => {
-    const responsive = await serviceApi.getUserAll();
-    setUsers(responsive);
+    try {
+      setIsLoading(true);
+      const responsive = await serviceApi.getUserAll();
+      setUsers(responsive);
+    } catch (error) {
+      console.error((error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sortUsers = (sort: string) => {
+    if (sort === 'city') {
+      setUsers(
+        [...users].sort((a, b) => a.address.city.localeCompare(b.address.city)),
+      );
+    } else {
+      setUsers(
+        [...users].sort((a, b) => a.company.name.localeCompare(b.company.name)),
+      );
+    }
   };
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    if (filter === 'default') return;
+    sortUsers(filter);
+  }, [filter]);
+
   const routes = useRoutes();
   return (
     <UserContext.Provider value={{users}}>
       <main className={style.main}>
         <section className={style.main__menu}>
-          <BlockMenu />
+          <BlockMenu setFilter={setFilter} />
         </section>
         <section className={style.main__content}>
-          <BrowserRouter>{routes}</BrowserRouter>
+          {isLoading ? (
+            <MyLoader></MyLoader>
+          ) : (
+            <BrowserRouter>{routes}</BrowserRouter>
+          )}
         </section>
       </main>
     </UserContext.Provider>
