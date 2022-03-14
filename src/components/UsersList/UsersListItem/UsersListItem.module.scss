@@ -1,0 +1,36 @@
+@import 'assets/styles/base.scss';
+
+.list__item {
+  position: relative;
+  margin-bottom: 22px;
+  padding: 10px;
+  font-size: 11px;
+  background-color: $color_bg_user;
+  border-radius: 8px;
+
+  & > div {
+    margin-bottom: 7px;
+  }
+
+  & > div:last-of-type {
+    margin-bottom: 0;
+  }
+
+  &__heading {
+    span {
+      text-transform: uppercase;
+    }
+  }
+
+  &__link {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    color: $color_accent;
+    font-size: 12px;
+  }
+
+  span {
+    color: $color-text_gray;
+  }
+}
