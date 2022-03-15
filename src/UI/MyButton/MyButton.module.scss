@@ -15,5 +15,6 @@
 
   &:disabled {
     background-color: $color_disable;
+    cursor: default;
   }
 }

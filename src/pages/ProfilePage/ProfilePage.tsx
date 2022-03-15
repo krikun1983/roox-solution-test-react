@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
+import UserForm from 'components/UserForm';
 import serviceApi from 'serverApi/service-api';
 import {UserFull} from 'serverApi/types';
 import {MyLoader} from 'UI';
@@ -35,14 +36,9 @@ const ProfilePage: React.FC = () => {
       ) : (
         <>
           <h1 className={style.profile__heading}>Профиль пользователя</h1>
-          <div>{user.name}</div>
-          <div>{user.username}</div>
-          <div>{user.email}</div>
-          <div>{user.address?.street}</div>
-          <div>{user.address?.city}</div>
-          <div>{user.address?.zipcode}</div>
-          <div>{user.phone}</div>
-          <div>{user.website}</div>
+          <div className={style.profile__form}>
+            <UserForm {...user} />
+          </div>
         </>
       )}
     </div>

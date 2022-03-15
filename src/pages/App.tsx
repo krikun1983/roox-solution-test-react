@@ -48,14 +48,14 @@ const App: React.FC = () => {
   const routes = useRoutes();
   return (
     <UserContext.Provider value={{users, isLoading}}>
-      <main className={style.main}>
-        <section className={style.main__menu}>
-          <BlockMenu setFilter={setFilter} />
-        </section>
-        <section className={style.main__content}>
-          <BrowserRouter>{routes}</BrowserRouter>
-        </section>
-      </main>
+      <BrowserRouter>
+        <main className={style.main}>
+          <section className={style.main__menu}>
+            <BlockMenu setFilter={setFilter} />
+          </section>
+          <section className={style.main__content}>{routes}</section>
+        </main>
+      </BrowserRouter>
     </UserContext.Provider>
   );
 };

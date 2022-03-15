@@ -2,8 +2,14 @@
 
 .profile {
   &__heading {
+    margin-bottom: 16px;
     font-weight: 700;
     font-size: 14px;
-    font-style: bold;
+  }
+
+  &__form {
+    padding: 9px 6px 19px 12px;
+    border: 1px solid $color_bg_user;
+    border-radius: 8px;
   }
 }
