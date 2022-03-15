@@ -1,17 +1,91 @@
-import React, {ChangeEvent, FormEvent, useState} from 'react';
+import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {UserFull} from 'serverApi/types';
 import {MyButton} from 'UI';
 import style from './UserForm.module.scss';
 
 type Props = UserFull;
 
+type MyErrorType = {
+  name: boolean;
+  username: boolean;
+  email: boolean;
+  street: boolean;
+  city: boolean;
+  zipcode: boolean;
+  phone: boolean;
+  website: boolean;
+};
+
+const isCheckEmail = `^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-.]{2,20}\\.+[a-zA-Z0-9-.]{1,30}$`;
+
+const myError = {
+  name: false,
+  username: false,
+  email: false,
+  street: false,
+  city: false,
+  zipcode: false,
+  phone: false,
+  website: false,
+};
+
+const validateInput = (
+  name: string,
+  value: string,
+  setState: React.Dispatch<React.SetStateAction<MyErrorType>>,
+): void => {
+  if (value === undefined) return;
+
+  if (value.length === 0 || (value.length > 0 && value.trim().length === 0)) {
+    setState(prev => ({...prev, [name]: true}));
+  } else {
+    setState(prev => ({...prev, [name]: false}));
+  }
+};
+
 const UserForm: React.FC<Props> = props => {
   const [profile, setProfile] = useState({...props, comment: ''});
-  const [formActive, setFormActive] = useState(true);
+  const [formActive, setFormActive] = useState(false);
+  const [error, setError] = useState(myError);
+  const [send, setSend] = useState(false);
+
+  const validateSend = () => {
+    if (formActive && Object.values(error).includes(true)) {
+      setSend(false);
+    } else {
+      setSend(true);
+    }
+  };
+
+  useEffect(() => {
+    validateInput('name', profile.name, setError);
+    validateInput('username', profile.username, setError);
+    validateInput('email', profile.email, setError);
+    validateInput('phone', profile.phone, setError);
+    validateInput('website', profile.website, setError);
+    validateInput('street', profile.address?.street, setError);
+    validateInput('zipcode', profile.address?.zipcode, setError);
+    validateInput('city', profile.address?.city, setError);
+  }, [
+    formActive,
+    profile.name,
+    profile.username,
+    profile.email,
+    profile.phone,
+    profile.website,
+    profile.address?.street,
+    profile.address?.zipcode,
+    profile.address?.city,
+  ]);
+
+  useEffect(() => {
+    validateSend();
+  }, [error]);
 
   const handleProfile = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    if (e.target.value.length > 60) return;
     if (
       e.target.name === 'street' ||
       e.target.name === 'city' ||
@@ -19,10 +93,16 @@ const UserForm: React.FC<Props> = props => {
     ) {
       setProfile({
         ...profile,
-        address: {...profile.address, [e.target.name]: e.target.value},
+        address: {
+          ...profile.address,
+          [e.target.name]: e.target.value.replace(/\s+/g, ' '),
+        },
       });
     } else {
-      setProfile({...profile, [e.target.name]: e.target.value});
+      setProfile({
+        ...profile,
+        [e.target.name]: e.target.value.replace(/\s+/g, ' '),
+      });
     }
   };
 
@@ -34,22 +114,24 @@ const UserForm: React.FC<Props> = props => {
   const handleSubmitForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log({
-      id: profile.id,
-      name: profile.name,
-      username: profile.username,
-      email: profile.email,
-      address: {
-        street: profile.address?.street,
-        city: profile.address?.city,
-        zipcode: profile.address?.zipcode,
-      },
-      phone: profile.phone,
-      website: profile.website,
-      comment: profile.comment,
-    });
+    console.log(
+      JSON.stringify({
+        id: profile.id,
+        name: profile.name.trim(),
+        username: profile.username,
+        email: profile.email.trim(),
+        address: {
+          street: profile.address?.street.trim(),
+          city: profile.address?.city.trim(),
+          zipcode: profile.address?.zipcode.trim(),
+        },
+        phone: profile.phone.trim(),
+        website: profile.website.trim(),
+        comment: profile.comment.trim(),
+      }),
+    );
 
-    setFormActive(true);
+    setFormActive(false);
   };
 
   return (
@@ -57,7 +139,7 @@ const UserForm: React.FC<Props> = props => {
       <form className={style.form} onSubmit={handleSubmitForm}>
         <div className={style.form__btn_edit}>
           <MyButton type="button" onClick={handleEditProfile}>
-            {formActive ? 'Редактировать' : 'Отменить'}
+            {!formActive ? 'Редактировать' : 'Отменить'}
           </MyButton>
         </div>
         <label htmlFor="name">Name</label>
@@ -66,7 +148,7 @@ const UserForm: React.FC<Props> = props => {
           name="name"
           value={profile.name}
           onChange={handleProfile}
-          readOnly={formActive}
+          readOnly={!formActive}
           required
           type="text"
         />
@@ -76,7 +158,7 @@ const UserForm: React.FC<Props> = props => {
           name="username"
           value={profile.username}
           onChange={handleProfile}
-          readOnly={formActive}
+          readOnly={!formActive}
           required
           type="text"
         />
@@ -86,7 +168,8 @@ const UserForm: React.FC<Props> = props => {
           name="email"
           value={profile.email}
           onChange={handleProfile}
-          readOnly={formActive}
+          readOnly={!formActive}
+          pattern={isCheckEmail}
           required
           type="email"
         />
@@ -96,7 +179,7 @@ const UserForm: React.FC<Props> = props => {
           name="street"
           value={profile.address?.street}
           onChange={handleProfile}
-          readOnly={formActive}
+          readOnly={!formActive}
           required
           type="text"
         />
@@ -106,7 +189,7 @@ const UserForm: React.FC<Props> = props => {
           name="city"
           value={profile.address?.city}
           onChange={handleProfile}
-          readOnly={formActive}
+          readOnly={!formActive}
           required
           type="text"
         />
@@ -116,7 +199,7 @@ const UserForm: React.FC<Props> = props => {
           name="zipcode"
           value={profile.address?.zipcode}
           onChange={handleProfile}
-          readOnly={formActive}
+          readOnly={!formActive}
           required
           type="text"
         />
@@ -126,7 +209,7 @@ const UserForm: React.FC<Props> = props => {
           name="phone"
           value={profile.phone}
           onChange={handleProfile}
-          readOnly={formActive}
+          readOnly={!formActive}
           required
           type="text"
         />
@@ -136,7 +219,7 @@ const UserForm: React.FC<Props> = props => {
           name="website"
           value={profile.website}
           onChange={handleProfile}
-          readOnly={formActive}
+          readOnly={!formActive}
           required
           type="text"
         />
@@ -145,11 +228,14 @@ const UserForm: React.FC<Props> = props => {
           id="comment"
           name="comment"
           value={profile.comment}
-          readOnly={formActive}
+          readOnly={!formActive}
           onChange={handleProfile}
         />
         <div className={style.form__btn_send}>
-          <MyButton type="submit" disabled={formActive}>
+          <MyButton
+            type="submit"
+            disabled={!(formActive === true) || send === false}
+          >
             Отправить
           </MyButton>
         </div>
