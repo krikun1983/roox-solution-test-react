@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, FormEvent, useState} from 'react';
 import {UserFull} from 'serverApi/types';
 import {MyButton} from 'UI';
 import style from './UserForm.module.scss';
@@ -12,15 +12,52 @@ const UserForm: React.FC<Props> = props => {
   const handleProfile = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setProfile({...profile, [e.target.name]: e.target.value});
+    if (
+      e.target.name === 'street' ||
+      e.target.name === 'city' ||
+      e.target.name === 'zipcode'
+    ) {
+      setProfile({
+        ...profile,
+        address: {...profile.address, [e.target.name]: e.target.value},
+      });
+    } else {
+      setProfile({...profile, [e.target.name]: e.target.value});
+    }
+  };
+
+  const handleEditProfile = () => {
+    setFormActive(!formActive);
+    setProfile({...props, comment: ''});
+  };
+
+  const handleSubmitForm = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    console.log({
+      id: profile.id,
+      name: profile.name,
+      username: profile.username,
+      email: profile.email,
+      address: {
+        street: profile.address?.street,
+        city: profile.address?.city,
+        zipcode: profile.address?.zipcode,
+      },
+      phone: profile.phone,
+      website: profile.website,
+      comment: profile.comment,
+    });
+
+    setFormActive(true);
   };
 
   return (
     <>
-      <form className={style.form}>
+      <form className={style.form} onSubmit={handleSubmitForm}>
         <div className={style.form__btn_edit}>
-          <MyButton type="button" onClick={() => setFormActive(false)}>
-            Редактировать
+          <MyButton type="button" onClick={handleEditProfile}>
+            {formActive ? 'Редактировать' : 'Отменить'}
           </MyButton>
         </div>
         <label htmlFor="name">Name</label>
@@ -112,7 +149,7 @@ const UserForm: React.FC<Props> = props => {
           onChange={handleProfile}
         />
         <div className={style.form__btn_send}>
-          <MyButton type="submit" disabled>
+          <MyButton type="submit" disabled={formActive}>
             Отправить
           </MyButton>
         </div>

@@ -18,3 +18,16 @@
     cursor: default;
   }
 }
+
+button[type='submit'] {
+  background-color: $color_success;
+
+  &:hover {
+    background-color: $color_success_hover;
+  }
+
+  &:disabled {
+    background-color: $color_disable;
+    cursor: default;
+  }
+}

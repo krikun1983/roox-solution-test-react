@@ -1,6 +1,9 @@
 @import 'assets/styles/base.scss';
 
 .menu {
+  position: relative;
+  height: 100%;
+
   &__heading {
     margin-bottom: 10.5px;
     font-size: 12px;
@@ -9,5 +12,10 @@
 
   &__item {
     margin-bottom: 10.5px;
+  }
+
+  &__btn_back {
+    position: absolute;
+    bottom: 10%;
   }
 }
